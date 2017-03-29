@@ -1,0 +1,259 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Edit customer address template
+ *
+ * @var $block \Magento\Customer\Block\Address\Edit
+ */
+?>
+<form class="form-address-edit" action="<?php /* @escapeNotVerified */ echo $block->getSaveUrl() ?>" method="post" id="form-validate" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
+    <fieldset class="fieldset">
+        <legend class="legend"><span><?php /* @escapeNotVerified */ echo __('Contact Information') ?></span></legend><br>
+        <?php echo $block->getBlockHtml('formkey')?>
+        <input type="hidden" name="success_url" value="<?php /* @escapeNotVerified */ echo $block->getSuccessUrl() ?>">
+        <input type="hidden" name="error_url" value="<?php /* @escapeNotVerified */ echo $block->getErrorUrl() ?>">
+        <?php echo $block->getNameBlockHtml() ?>
+        <div class="field company">
+            <label class="label" for="company"><span><?php /* @escapeNotVerified */ echo __('Company') ?></span></label>
+            <div class="control">
+                <input type="text" name="company" id="company" title="<?php /* @escapeNotVerified */ echo __('Company') ?>" value="<?php echo $block->escapeHtml($block->getAddress()->getCompany()) ?>" class="input-text <?php /* @escapeNotVerified */ echo $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('company') ?>">
+            </div>
+        </div>
+        <div class="field telephone required">
+            <label class="label" for="telephone"><span><?php /* @escapeNotVerified */ echo __('Phone Number') ?></span></label>
+            <div class="control">
+                <input type="text" name="telephone" value="<?php echo $block->escapeHtml($block->getAddress()->getTelephone()) ?>" title="<?php /* @escapeNotVerified */ echo __('Phone Number') ?>" class="input-text <?php /* @escapeNotVerified */ echo $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('telephone') ?>" id="telephone">
+            </div>
+        </div>
+        <div class="field fax">
+            <label class="label" for="fax"><span><?php /* @escapeNotVerified */ echo __('Fax') ?></span></label>
+            <div class="control">
+                <input type="text" name="fax" id="fax" title="<?php /* @escapeNotVerified */ echo __('Fax') ?>" value="<?php echo $block->escapeHtml($block->getAddress()->getFax()) ?>" class="input-text <?php /* @escapeNotVerified */ echo $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('fax') ?>">
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="fieldset">
+        <legend class="legend"><span><?php /* @escapeNotVerified */ echo __('Address') ?></span></legend><br>
+        <?php $_streetValidationClass = $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('street'); ?>
+        <div class="field street required">
+            <label for="street_1" class="label"><span><?php /* @escapeNotVerified */ echo __('Street Address') ?></span></label>
+            <div class="control">
+                <input type="text" name="street[]" value="<?php echo $block->escapeHtml($block->getStreetLine(1)) ?>" title="<?php /* @escapeNotVerified */ echo __('Street Address') ?>" id="street_1" class="input-text <?php /* @escapeNotVerified */ echo $_streetValidationClass ?>"  />
+                <div class="nested">
+                    <?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
+                    <?php for ($_i = 1, $_n = $this->helper('Magento\Customer\Helper\Address')->getStreetLines(); $_i < $_n; $_i++): ?>
+                        <div class="field additional">
+                            <label class="label" for="street_<?php /* @escapeNotVerified */ echo $_i+1 ?>">
+                                <span><?php /* @escapeNotVerified */ echo __('Street Address %1', $_i+1) ?></span>
+                            </label>
+                            <div class="control">
+                                <input type="text" name="street[]" value="<?php echo $block->escapeHtml($block->getStreetLine($_i+1)) ?>" title="<?php /* @escapeNotVerified */ echo __('Street Address %1', $_i+1) ?>" id="street_<?php /* @escapeNotVerified */ echo $_i+1 ?>" class="input-text <?php /* @escapeNotVerified */ echo $_streetValidationClass ?>">
+                            </div>
+                        </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+        </div>
+
+        <?php if ($this->helper('Magento\Customer\Helper\Address')->isVatAttributeVisible()) : ?>
+            <div class="field taxvat">
+                <label class="label" for="vat_id"><span><?php /* @escapeNotVerified */ echo __('VAT Number') ?></span></label>
+                <div class="control">
+                    <input type="text" name="vat_id" value="<?php echo $block->escapeHtml($block->getAddress()->getVatId()) ?>" title="<?php /* @escapeNotVerified */ echo __('VAT Number') ?>" class="input-text <?php /* @escapeNotVerified */ echo $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('vat_id') ?>" id="vat_id">
+                </div>
+            </div>
+        <?php endif; ?>
+        <div class="field city required">
+            <label class="label" for="city"><span><?php /* @escapeNotVerified */ echo __('City') ?></span></label>
+            <div class="control">
+                <input type="text" name="city" value="<?php echo $block->escapeHtml($block->getAddress()->getCity()) ?>" title="<?php /* @escapeNotVerified */ echo __('City') ?>" class="input-text <?php /* @escapeNotVerified */ echo $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('city') ?>" id="city">
+            </div>
+        </div>
+        <div class="field region required">
+            <label class="label" for="region_id"><span><?php /* @escapeNotVerified */ echo __('State/Province') ?></span></label>
+            <div class="control">
+                <select id="region_id" name="region_id" title="<?php /* @escapeNotVerified */ echo __('State/Province') ?>" class="validate-select" <?php echo(!$block->getConfig('general/region/display_all')) ? ' disabled="disabled"' : '';?>>
+                    <option value=""><?php /* @escapeNotVerified */ echo __('Please select a region, state or province.') ?></option>
+                </select>
+                <input type="text" id="region" name="region" value="<?php echo $block->escapeHtml($block->getRegion()) ?>"  title="<?php /* @escapeNotVerified */ echo __('State/Province') ?>" class="input-text <?php /* @escapeNotVerified */ echo $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('region') ?>"<?php echo(!$block->getConfig('general/region/display_all')) ? ' disabled="disabled"' : '';?>/>
+            </div>
+        </div>
+        <div class="field zip required">
+            <label class="label" for="zip"><span><?php /* @escapeNotVerified */ echo __('Zip/Postal Code') ?></span></label>
+            <div class="control">
+                <input type="text" name="postcode" value="<?php echo $block->escapeHtml($block->getAddress()->getPostcode()) ?>" title="<?php /* @escapeNotVerified */ echo __('Zip/Postal Code') ?>" id="zip" class="input-text validate-zip-international <?php /* @escapeNotVerified */ echo $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('postcode') ?>">
+            </div>
+        </div>
+        <div class="field country required">
+            <label class="label" for="country"><span><?php /* @escapeNotVerified */ echo __('Country') ?></span></label>
+            <div class="control">
+                <?php echo $block->getCountryHtmlSelect() ?>
+            </div>
+        </div>
+
+        <?php if ($block->isDefaultBilling()): ?>
+            <div class="message info"><?php /* @escapeNotVerified */ echo __("It's a default billing address.") ?></div>
+        <?php elseif ($block->canSetAsDefaultBilling()): ?>
+            <div class="field choice set billing">
+                <input type="checkbox" id="primary_billing" name="default_billing" value="1" class="checkbox">
+                <label class="label" for="primary_billing"><span><?php /* @escapeNotVerified */ echo __('Use as my default billing address') ?></span></label>
+            </div>
+        <?php else: ?>
+            <input type="hidden" name="default_billing" value="1" />
+        <?php endif; ?>
+
+        <?php if ($block->isDefaultShipping()): ?>
+            <div class="message info"><?php /* @escapeNotVerified */ echo __("It's a default shipping address.") ?></div>
+        <?php elseif ($block->canSetAsDefaultShipping()): ?>
+            <div class="field choice set shipping">
+                <input type="checkbox" id="primary_shipping" name="default_shipping" value="1" class="checkbox">
+                <label class="label" for="primary_shipping"><span><?php /* @escapeNotVerified */ echo __('Use as my default shipping address') ?></span></label>
+            </div>
+        <?php else: ?>
+            <input type="hidden" name="default_shipping" value="1">
+        <?php endif; ?>
+    </fieldset>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit" class="action save primary" data-action="save-address" title="<?php /* @escapeNotVerified */ echo __('Save Address') ?>">
+                <span><?php /* @escapeNotVerified */ echo __('Save Address') ?></span>
+            </button>
+        </div>
+        <div class="secondary">
+            <a class="action back" href="<?php echo $block->escapeUrl($block->getBackUrl()) ?>"><span><?php /* @escapeNotVerified */ echo __('Go back') ?></span></a>
+        </div>
+    </div>
+</form>
+<script type="text/x-magento-init">
+    {
+        "#form-validate": {
+            "validation": {}
+        },
+        "#country": {
+            "regionUpdater": {
+                "optionalRegionAllowed": <?php /* @escapeNotVerified */ echo($block->getConfig('general/region/display_all') ? 'true' : 'false'); ?>,
+                "regionListId": "#region_id",
+                "regionInputId": "#region",
+                "postcodeId": "#zip",
+                "form": "#form-validate",
+                "regionJson": <?php /* @escapeNotVerified */ echo $this->helper('Magento\Directory\Helper\Data')->getRegionJson() ?>,
+                "defaultRegion": "<?php /* @escapeNotVerified */ echo $block->getRegionId() ?>",
+                "countriesWithOptionalZip": <?php /* @escapeNotVerified */ echo $this->helper('Magento\Directory\Helper\Data')->getCountriesWithOptionalZip(true) ?>
+            }
+        }
+    }
+</script>
+<script>
+    var placeSearch, autocomplete;
+    var componentForm = {
+        street_number: 'short_name',
+        route: 'long_name',
+        locality: 'long_name',
+        administrative_area_level_1: 'long_name',
+        country: 'short_name',
+        postal_code: 'short_name'
+    };
+
+    var lookupElement = {
+        street_number: 'street_1',
+        route: 'street_2',
+        locality: 'city',
+        administrative_area_level_1: 'region',
+        country: 'country',
+        postal_code: 'zip'
+    }
+
+    function initAutocomplete() {
+        var enabled = '<?php echo $block->getConfig('shipping/shipper_autocomplete/active')?>';
+        if(enabled == '1') {
+            var input = document.getElementById('street_1');
+            input.addEventListener('focus', geolocate, true);
+
+            autocomplete = new google.maps.places.Autocomplete(
+                /** @type {!HTMLInputElement} */(document.getElementById('street_1')),
+                {types: ['geocode']});
+
+            autocomplete.addListener('place_changed', fillInAddress);
+        }
+    }
+
+    function fillInAddress() {
+        var place = autocomplete.getPlace();
+
+        var street = [];
+        var region  = '';
+
+        for (var i = 0; i < place.address_components.length; i++) {
+            var addressType = place.address_components[i].types[0];
+            if (componentForm[addressType]) {
+                var val = place.address_components[i][componentForm[addressType]];
+                if(addressType == 'street_number') {
+                    street[0] = val;
+                }
+                else if(addressType == 'route') {
+                    street[1] = val;
+                }
+                else if (addressType == 'administrative_area_level_1') {
+                    region = val;
+                }
+                else {
+                    var elementId = lookupElement[addressType];
+                    document.getElementById(elementId).value = val;
+                    if(addressType == 'country') {
+                        debugger;
+                        document.getElementById(elementId).dispatchEvent(new Event('change'));
+                    }
+                }
+            }
+        }
+        if(street.length > 0) {
+            document.getElementById('street_1').value = street.join(' ');
+        }
+        if(region != '') {
+            if(document.getElementById('region_id')) {
+                var regionSelector = document.getElementById('region_id');
+                for (i = 0; i < regionSelector.length; i++) {
+                    if(regionSelector.options[i].text === region)
+                    {
+                        regionSelector.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            if(document.getElementById('region')) {
+                document.getElementById('region').value = region;
+
+            }
+
+
+        }
+    }
+
+    function geolocate() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var geolocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                var circle = new google.maps.Circle({
+                    center: geolocation,
+                    radius: position.coords.accuracy
+                });
+                autocomplete.setBounds(circle.getBounds());
+            });
+        }
+    }
+
+</script>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=<?php echo $block->getConfig('shipping/shipper_autocomplete/google_api_key')?>&libraries=places&callback=initAutocomplete"
+    async defer></script>
