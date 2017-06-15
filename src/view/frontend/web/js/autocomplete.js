@@ -4,9 +4,13 @@ define([
     'ShipperHQ_AddressAutocomplete/js/google_maps_loader',
     'Magento_Checkout/js/checkout-data' ,
     'uiRegistry'
-], function(
-    $, Component, GoogleMapsLoader, checkoutData, uiRegistry
-){
+], function (
+    $,
+    Component,
+    GoogleMapsLoader,
+    checkoutData,
+    uiRegistry
+) {
 
     var componentForm = {
         street_number: 'short_name',
@@ -27,20 +31,21 @@ define([
     };
 
 
-    GoogleMapsLoader.done(function(){
+    GoogleMapsLoader.done(function () {
         var enabled = window.checkoutConfig.shipperhq_autocomplete.active;
 
         var geocoder = new google.maps.Geocoder();
         setTimeout(function () {
-            if(enabled == '1') {
+            if (enabled == '1') {
                 var domID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
 
                 var street = $('#'+domID);
-                street.each(function() {
+                street.each(function () {
                     var element = this;
                     autocomplete = new google.maps.places.Autocomplete(
                         /** @type {!HTMLInputElement} */(this),
-                        {types: ['geocode']});
+                        {types: ['geocode']}
+                    );
                     autocomplete.addListener('place_changed', fillInAddress);
 
                 });
@@ -48,11 +53,11 @@ define([
             }
         }, 5000);
 
-    }).fail(function(){
+    }).fail(function () {
         console.error("ERROR: Google maps library failed to load");
     });
 
-    var fillInAddress = function() {
+    var fillInAddress = function () {
         var place = autocomplete.getPlace();
 
         var street = [];
@@ -62,49 +67,46 @@ define([
             var addressType = place.address_components[i].types[0];
             if (componentForm[addressType]) {
                 var value = place.address_components[i][componentForm[addressType]];
-                if(addressType == 'street_number') {
+                if (addressType == 'street_number') {
                     street[0] = value;
-                }
-                else if(addressType == 'route') {
+                } else if (addressType == 'route') {
                     street[1] = value;
-                }
-                else if (addressType == 'administrative_area_level_1') {
+                } else if (addressType == 'administrative_area_level_1') {
                     region = value;
-                }
-                else {
+                } else {
                     var elementId = lookupElement[addressType];
                     var thisDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.'+ elementId).uid;
-                    if($('#'+thisDomID)) {
+                    if ($('#'+thisDomID)) {
                         $('#'+thisDomID).val(value);
                         $('#'+thisDomID).trigger('change');
                     }
                 }
             }
         }
-        if(street.length > 0) {
+        if (street.length > 0) {
             var domID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
             var streetString = street.join(' ');
-            if($('#'+domID)) {
+            if ($('#'+domID)) {
                 $('#'+domID).val(streetString);
                 $('#'+domID).trigger('change');
-
             }
         }
 
-        if(region != '') {
-            if(uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id')) {
+        if (region != '') {
+            if (uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id')) {
                 var regionDomId = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id').uid;
-                if($('#'+regionDomId)) {
+                if ($('#'+regionDomId)) {
                     //search for and select region using text
                     $('#'+regionDomId +' option')
-                        .filter(function() {return $.trim( $(this).text() ) == region; })
+                        .filter(function () {
+return $.trim($(this).text()) == region; })
                         .attr('selected',true);
                     $('#'+regionDomId).trigger('change');
                 }
             }
-            if(uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id_input')) {
+            if (uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id_input')) {
                 var regionDomId = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id_input').uid;
-                if($('#'+regionDomId)) {
+                if ($('#'+regionDomId)) {
                     $('#'+regionDomId).val(region);
                     $('#'+regionDomId).trigger('change');
                 }
@@ -112,9 +114,9 @@ define([
         }
     }
 
-    geolocate = function() {
+    geolocate = function () {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
+            navigator.geolocation.getCurrentPosition(function (position) {
                 var geolocation = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude

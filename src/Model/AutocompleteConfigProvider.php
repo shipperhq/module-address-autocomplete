@@ -48,8 +48,8 @@ class AutocompleteConfigProvider implements ConfigProviderInterface
      */
     public function __construct(
         \ShipperHQ\Shipper\Helper\Data $helper
-    )
-    {
+    ) {
+    
         $this->helper = $helper;
     }
 
