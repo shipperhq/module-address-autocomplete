@@ -159,7 +159,9 @@
         locality: 'long_name',
         administrative_area_level_1: 'long_name',
         country: 'short_name',
-        postal_code: 'short_name'
+        postal_code: 'short_name',
+        postal_town: 'short_name',
+        sublocality_level_1: 'short_name'
     };
 
     var lookupElement = {
@@ -190,7 +192,7 @@
 
         var street = [];
         var region  = '';
-
+        var city = '';
         for (var i = 0; i < place.address_components.length; i++) {
             var addressType = place.address_components[i].types[0];
             if (componentForm[addressType]) {
@@ -204,11 +206,20 @@
                 else if (addressType == 'administrative_area_level_1') {
                     region = val;
                 }
+                else if (addressType == 'sublocality_level_1') {
+                    city = val;
+                }
+                else if (addressType == 'postal_town') {
+                    city = val;
+                }
+                else if (addressType == 'locality' && city == '') {
+                    //ignore if we are using one of other city values already
+                    city = val;
+                }
                 else {
                     var elementId = lookupElement[addressType];
                     document.getElementById(elementId).value = val;
                     if(addressType == 'country') {
-                        debugger;
                         document.getElementById(elementId).dispatchEvent(new Event('change'));
                     }
                 }
@@ -217,6 +228,7 @@
         if(street.length > 0) {
             document.getElementById('street_1').value = street.join(' ');
         }
+        document.getElementById('city').value = city;
         if(region != '') {
             if(document.getElementById('region_id')) {
                 var regionSelector = document.getElementById('region_id');

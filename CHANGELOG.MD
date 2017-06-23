@@ -7,3 +7,7 @@ This project adheres to Semantic Versioning(http://semver.org/).
 SHQ16-2072 address autocomplete changes
 
 
+## 1.0.2
+SHQ16-2112 support for address elements specific to New York, UK and Sweden
+
+

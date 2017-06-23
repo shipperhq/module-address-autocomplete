@@ -18,7 +18,9 @@ define([
         locality: 'long_name',
         administrative_area_level_1: 'long_name',
         country: 'short_name',
-        postal_code: 'short_name'
+        postal_code: 'short_name',
+        postal_town: 'short_name',
+        sublocality_level_1: 'short_name'
     };
 
     var lookupElement = {
@@ -62,6 +64,7 @@ define([
 
         var street = [];
         var region  = '';
+        var city = '';
 
         for (var i = 0; i < place.address_components.length; i++) {
             var addressType = place.address_components[i].types[0];
@@ -73,7 +76,16 @@ define([
                     street[1] = value;
                 } else if (addressType == 'administrative_area_level_1') {
                     region = value;
-                } else {
+                } else if (addressType == 'sublocality_level_1') {
+                    city = value;
+                }
+                else if (addressType == 'postal_town') {
+                    city = value;
+                }
+                else if (addressType == 'locality' && city == '') {
+                    //ignore if we are using one of other city values already
+                    city = value;
+                }else {
                     var elementId = lookupElement[addressType];
                     var thisDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.'+ elementId).uid;
                     if ($('#'+thisDomID)) {
@@ -91,7 +103,11 @@ define([
                 $('#'+domID).trigger('change');
             }
         }
-
+        var cityDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.city').uid;
+        if ($('#'+cityDomID)) {
+            $('#'+cityDomID).val(city);
+            $('#'+cityDomID).trigger('change');
+        }
         if (region != '') {
             if (uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id')) {
                 var regionDomId = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id').uid;
