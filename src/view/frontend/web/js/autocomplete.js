@@ -13,6 +13,7 @@ define([
 ) {
 
     var componentForm = {
+        subpremise: 'short_name',
         street_number: 'short_name',
         route: 'long_name',
         locality: 'long_name',
@@ -64,14 +65,17 @@ define([
 
         var street = [];
         var region  = '';
+        var streetNumber = '';
         var city = '';
 
         for (var i = 0; i < place.address_components.length; i++) {
             var addressType = place.address_components[i].types[0];
             if (componentForm[addressType]) {
                 var value = place.address_components[i][componentForm[addressType]];
-                if (addressType == 'street_number') {
-                    street[0] = value;
+                if (addressType == 'subpremise') {
+                    streetNumber = value + '/';
+                } else if (addressType == 'street_number') {
+                    streetNumber = streetNumber + value;
                 } else if (addressType == 'route') {
                     street[1] = value;
                 } else if (addressType == 'administrative_area_level_1') {
@@ -96,6 +100,7 @@ define([
             }
         }
         if (street.length > 0) {
+            street[0] = streetNumber;
             var domID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
             var streetString = street.join(' ');
             if ($('#'+domID)) {

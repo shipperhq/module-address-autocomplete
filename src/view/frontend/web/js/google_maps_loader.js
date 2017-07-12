@@ -9,7 +9,7 @@ define(['jquery'],function ($) {
             google_maps_loaded_def.resolve(google.maps);
         }
         var apiKey =  window.checkoutConfig.shipperhq_autocomplete.api_key;
-        if (apiKey != 'false') {
+        if (apiKey != 'false' && apiKey !== null) {
             var url = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=places&callback=google_maps_loaded';
             require([url], function () {}, function (err) {
                 google_maps_loaded_def.reject();
