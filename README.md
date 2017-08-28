@@ -23,7 +23,7 @@ Installation Instructions
 -------------------------
 Install using composer by adding to your composer file using commands:
 
-1. composer require shipperhq/module-address-autcomplete
+1. composer require shipperhq/module-address-autocomplete
 2. composer update
 3. bin/magento setup:upgrade
 
