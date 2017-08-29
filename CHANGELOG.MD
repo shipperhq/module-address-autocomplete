@@ -8,8 +8,15 @@ Initial Release
 ## 1.0.1
 SHQ16-2072 address autocomplete changes
 
+## 1.0.2
+SHQ16-2072 address autocomplete changes
 
-## 20.0.5
-SHQ16-2150 handle no API key, increase z-index and handle apartment number. Also changed tagged version number
+## 1.0.3
+SHQ16-2112 support for address elements specific to New York, UK and Sweden
+
+## 1.0.4
+SHQ16-2150 handle no API key, increase z-index and handle apartment number
+## 20.0.6
+SHQ16-2244 add polyfill for IE 11 issue
 
 

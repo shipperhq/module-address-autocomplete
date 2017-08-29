@@ -152,23 +152,21 @@
     }
 </script>
 <script>
-    // polyfill the CustomEvent() 
+
     (function () {
+        if ( typeof window.CustomEvent === "function" ) return false;
 
-      if ( typeof window.CustomEvent === "function" ) return false;
+        function CustomEvent ( event, params ) {
+            params = params || { bubbles: false, cancelable: false, detail: undefined };
+            var evt = document.createEvent( 'CustomEvent' );
+            evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+            return evt;
+        }
 
-      function CustomEvent ( event, params ) {
-        params = params || { bubbles: false, cancelable: false, detail: undefined };
-        var evt = document.createEvent( 'CustomEvent' );
-        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
-        return evt;
-       }
-
-      CustomEvent.prototype = window.Event.prototype;
-
-      window.CustomEvent = CustomEvent;
+        CustomEvent.prototype = window.Event.prototype;
+        window.CustomEvent = CustomEvent;
     })();
-    
+
     var placeSearch, autocomplete;
     var componentForm = {
         street_number: 'short_name',
@@ -237,7 +235,7 @@
                     var elementId = lookupElement[addressType];
                     document.getElementById(elementId).value = val;
                     if(addressType == 'country') {
-                        document.getElementById(elementId).dispatchEvent(new window.CustomEvent('change'));
+                        document.getElementById(elementId).dispatchEvent(new  window.CustomEvent('change'));
                     }
                 }
             }
