@@ -17,7 +17,8 @@ For more information see [ShipperHQ](https://shipperhq.com/magento2).
 
 Compatibility
 -------------
-- Magento >= 2.0
+- Magento 2.0 -> 2.1
+- Magento 2.2 is currently being tested.
 
 Installation Instructions
 -------------------------
