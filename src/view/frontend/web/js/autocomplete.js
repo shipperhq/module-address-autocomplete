@@ -40,9 +40,9 @@ define([
         var geocoder = new google.maps.Geocoder();
         setTimeout(function () {
             if (enabled == '1') {
+                console.log('skdfjlsdkfjl');
                 var domID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
-
-                var street = $('#'+domID+ ', [name="street[0]"]');
+                var street = $('#'+domID + ', [name="street[0]"]');
                 street.each(function () {
                     var element = this;
                     autocomplete = new google.maps.places.Autocomplete(
@@ -61,8 +61,8 @@ define([
     });
 
     var fillInAddress = function () {
-        var place = autocomplete.getPlace();
-
+        var place = this.getPlace();
+        // debugger;
         var street = [];
         var region  = '';
         var streetNumber = '';
@@ -82,55 +82,53 @@ define([
                     region = value;
                 } else if (addressType == 'sublocality_level_1') {
                     city = value;
-                }
-                else if (addressType == 'postal_town') {
+                } else if (addressType == 'postal_town') {
                     city = value;
-                }
-                else if (addressType == 'locality' && city == '') {
+                } else if (addressType == 'locality' && city == '') {
                     //ignore if we are using one of other city values already
                     city = value;
-                }else {
-                    var elementId = lookupElement[addressType];
-                    var thisDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.'+ elementId).uid;
-                    if ($('#'+thisDomID)) {
-                        $('#'+thisDomID).val(value);
-                        $('#'+thisDomID).trigger('change');
+                } else {
+                    debugger;
+                    var elementId = lookupElement[addressType],
+                    $element = $('[name="' + elementId + '"]:visible');
+                    
+                    if ($element.length > 0) {
+                        $element.val(value).change();
                     }
                 }
             }
         }
         if (street.length > 0) {
             street[0] = streetNumber;
-            var domID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
             var streetString = street.join(' ');
-            if ($('#'+domID)) {
-                $('#'+domID).val(streetString);
-                $('#'+domID).trigger('change');
+            $element = $('[name="street[0]"]:visible');
+            
+            if ($element.length > 0) {
+                $element.val(streetString).change();
             }
         }
-        var cityDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.city').uid;
-        if ($('#'+cityDomID)) {
-            $('#'+cityDomID).val(city);
-            $('#'+cityDomID).trigger('change');
+        $element = $('[name="city"]:visible');
+        
+        if ($element.length > 0) {
+            $element.val(city).change();
         }
+        
         if (region != '') {
-            if (uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id')) {
-                var regionDomId = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id').uid;
-                if ($('#'+regionDomId)) {
-                    //search for and select region using text
-                    $('#'+regionDomId +' option')
-                        .filter(function () {
-return $.trim($(this).text()) == region; })
-                        .attr('selected',true);
-                    $('#'+regionDomId).trigger('change');
-                }
+            $element = $('[name="region_id"]:visible');
+            
+            if ($element.length > 0) {
+                $element.find('option')
+                    .filter(function () {
+                        return $.trim($(this).text()) == region;
+                    })
+                    .attr('selected', true).change();
             }
-            if (uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id_input')) {
-                var regionDomId = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id_input').uid;
-                if ($('#'+regionDomId)) {
-                    $('#'+regionDomId).val(region);
-                    $('#'+regionDomId).trigger('change');
-                }
+
+
+            $element = $('[name="region_id_input"]:visible');
+            
+            if ($element.length > 0) {
+                $element.val(region).change();
             }
         }
     }
