@@ -42,7 +42,7 @@ define([
             if (enabled == '1') {
                 var domID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
 
-                var street = $('#'+domID);
+                var street = $('#'+domID+ ', [name="street[0]"]');
                 street.each(function () {
                     var element = this;
                     autocomplete = new google.maps.places.Autocomplete(
