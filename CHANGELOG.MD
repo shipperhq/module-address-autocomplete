@@ -16,7 +16,7 @@ SHQ16-2112 support for address elements specific to New York, UK and Sweden
 
 ## 1.0.4
 SHQ16-2150 handle no API key, increase z-index and handle apartment number
-## 20.0.6
-SHQ16-2244 add polyfill for IE 11 issue
+## 20.1.0
+SHQ16-2328 moved css for autocomplete to less file
 
 
