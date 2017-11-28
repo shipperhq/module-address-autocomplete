@@ -82,14 +82,12 @@ define([
                     region = value;
                 } else if (addressType == 'sublocality_level_1') {
                     city = value;
-                }
-                else if (addressType == 'postal_town') {
+                } else if (addressType == 'postal_town') {
                     city = value;
-                }
-                else if (addressType == 'locality' && city == '') {
+                } else if (addressType == 'locality' && city == '') {
                     //ignore if we are using one of other city values already
                     city = value;
-                }else {
+                } else {
                     var elementId = lookupElement[addressType];
                     var thisDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.'+ elementId).uid;
                     if ($('#'+thisDomID)) {
