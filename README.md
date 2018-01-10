@@ -1,5 +1,6 @@
 # ShipperHQ Address Auto-Complete
-Add address lookup to your Magento 2 site using the simple tool, harnessing Google's Address Auto-Complete API
+Add address lookup to your Magento 2 site using the simple tool, harnessing Google's Address Auto-Complete API.
+
 More information on ShipperHQ capabilities are available at www.shipperhq.com
 
 Facts
@@ -8,16 +9,16 @@ Facts
 
 Description
 -----------
-ShipperHQ Address Auto-Complete will install a simple shipping extension in Magento 2. No account necessary and it's free to use.
+ShipperHQ Address Auto-Complete will install a simple shipping extension in Magento 2. No account is necessary and it's free to use.
 It requires installation of ShipperHQ extension, although a ShipperHQ account is NOT REQUIRED to use the address autocomplete feature.
 
 There's no cost for the extension and ShipperHQ is free for 30 days.
 
 The extension features address auto-complete for:
 
-1. Guest checkout support for entering shipping and billing address
+1. Guest checkout support for entering shipping address
 2. Logged in customer entering a new address in their address book
-3. Logged in customer entering a new shipping or billing address
+3. Logged in customer entering a new shipping address at checkout
 
 For more information see [ShipperHQ](https://shipperhq.com/magento2).
 

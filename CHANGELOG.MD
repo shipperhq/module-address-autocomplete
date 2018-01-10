@@ -16,7 +16,7 @@ SHQ16-2112 support for address elements specific to New York, UK and Sweden
 
 ## 1.0.4
 SHQ16-2150 handle no API key, increase z-index and handle apartment number
-## 20.1.1
-M2-56 code sniffer changes
+## 20.1.2
+Updated README with grammar corrections
 
 
