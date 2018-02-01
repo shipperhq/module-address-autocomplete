@@ -33,26 +33,33 @@ define([
         postal_code: 'postcode'
     };
 
+    var googleMapError = false;
+    window.gm_authFailure = function() {
+        googleMapError = true;
+    };
+
 
     GoogleMapsLoader.done(function () {
         var enabled = window.checkoutConfig.shipperhq_autocomplete.active;
 
         var geocoder = new google.maps.Geocoder();
         setTimeout(function () {
-            if (enabled == '1') {
-                var domID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
+            if(!googleMapError) {
+                if (enabled == '1') {
+                    var domID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
 
-                var street = $('#'+domID);
-                street.each(function () {
-                    var element = this;
-                    autocomplete = new google.maps.places.Autocomplete(
-                        /** @type {!HTMLInputElement} */(this),
-                        {types: ['geocode']}
-                    );
-                    autocomplete.addListener('place_changed', fillInAddress);
+                    var street = $('#' + domID);
+                    street.each(function () {
+                        var element = this;
+                        autocomplete = new google.maps.places.Autocomplete(
+                            /** @type {!HTMLInputElement} */(this),
+                            {types: ['geocode']}
+                        );
+                        autocomplete.addListener('place_changed', fillInAddress);
 
-                });
-                $('#'+domID).focus(geolocate);
+                    });
+                    $('#' + domID).focus(geolocate);
+                }
             }
         }, 5000);
 
