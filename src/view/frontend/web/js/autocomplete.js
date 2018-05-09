@@ -125,7 +125,8 @@ define([
                     //search for and select region using text
                     $('#'+regionDomId +' option')
                         .filter(function () {
-return $.trim($(this).text()) == region; })
+                            return $.trim($(this).text()) == region;
+                        })
                         .attr('selected',true);
                     $('#'+regionDomId).trigger('change');
                 }
@@ -141,7 +142,7 @@ return $.trim($(this).text()) == region; })
     }
 
     geolocate = function () {
-        if (navigator.geolocation) {
+        if (navigator.geolocation && window.checkoutConfig.shipperhq_autocomplete.use_geolocation === '1') {
             navigator.geolocation.getCurrentPosition(function (position) {
                 var geolocation = {
                     lat: position.coords.latitude,

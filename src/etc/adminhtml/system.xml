@@ -57,7 +57,18 @@
                 <field id="google_api_key" translate="label" sortOrder="120" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <label>API Key</label>
-                    <comment><![CDATA[<a href="http://docs.shipperhq.com/setting-up-google-maps-api-keys/" target="_blank">How to obtain Google API Key</a>]]> </comment></field>
+                    <comment><![CDATA[<a href="http://docs.shipperhq.com/setting-up-google-maps-api-keys/" target="_blank">How to obtain Google API Key</a>]]> </comment>
+                </field>
+                <field id="use_geolocation" type="select" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Use Geolocation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Increases accuracy of autocompletion results, but prompts the user to allow this site to access their location.
+                        ]]>
+                    </comment>
+                </field>
             </group>
         </section>
     </system>
