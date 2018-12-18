@@ -69,6 +69,16 @@
                         ]]>
                     </comment>
                 </field>
+                <field id="use_long_postcode" type="select" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Use Long Postcode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            If yes will use Zip+4 postcodes when available
+                        ]]>
+                    </comment>
+                </field>
             </group>
         </section>
     </system>

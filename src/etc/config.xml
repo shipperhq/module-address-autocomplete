@@ -38,6 +38,7 @@
         <shipping>
             <shipper_autocomplete>
                 <use_geolocation>1</use_geolocation>
+                <use_long_postcode>0</use_long_postcode>
             </shipper_autocomplete>
         </shipping>
     </default>

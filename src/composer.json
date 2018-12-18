@@ -25,10 +25,10 @@
     },
     "autoload": {
         "files": [
-            "src/registration.php"
+            "registration.php"
         ],
         "psr-4": {
-            "ShipperHQ\\AddressAutocomplete\\": "src/"
+            "ShipperHQ\\AddressAutocomplete\\": ""
         }
     }
 }

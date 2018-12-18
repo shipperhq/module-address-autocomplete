@@ -20,6 +20,7 @@ define([
         administrative_area_level_1: 'long_name',
         country: 'short_name',
         postal_code: 'short_name',
+        postal_code_suffix: 'short_name',
         postal_town: 'short_name',
         sublocality_level_1: 'short_name'
     };
@@ -49,8 +50,21 @@ define([
                     var domID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
 
                     var street = $('#' + domID);
+
+                    //SHQ18-260
+                    var observer = new MutationObserver(function () {
+                        observer.disconnect();
+                        $("#" + domID).attr("autocomplete", "new-password");
+                    });
+
                     street.each(function () {
                         var element = this;
+
+                        observer.observe(element, {
+                            attributes: true,
+                            attributeFilter: ['autocomplete']
+                        });
+
                         autocomplete = new google.maps.places.Autocomplete(
                             /** @type {!HTMLInputElement} */(this),
                             {types: ['geocode']}
@@ -74,6 +88,8 @@ define([
         var region  = '';
         var streetNumber = '';
         var city = '';
+        var postcode = '';
+        var postcodeSuffix = '';
 
         for (var i = 0; i < place.address_components.length; i++) {
             var addressType = place.address_components[i].types[0];
@@ -94,6 +110,20 @@ define([
                 } else if (addressType == 'locality' && city == '') {
                     //ignore if we are using one of other city values already
                     city = value;
+                } else if (addressType == 'postal_code') {
+                    postcode = value;
+                    var thisDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode').uid
+                    if ($('#'+thisDomID)) {
+                        $('#'+thisDomID).val(postcode + postcodeSuffix);
+                        $('#'+thisDomID).trigger('change');
+                    }
+                } else if (addressType == 'postal_code_suffix' && window.checkoutConfig.shipperhq_autocomplete.use_long_postcode) {
+                    postcodeSuffix = '-' + value;
+                    var thisDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode').uid
+                    if ($('#'+thisDomID)) {
+                        $('#'+thisDomID).val(postcode + postcodeSuffix);
+                        $('#'+thisDomID).trigger('change');
+                    }
                 } else {
                     var elementId = lookupElement[addressType];
                     var thisDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.'+ elementId).uid;

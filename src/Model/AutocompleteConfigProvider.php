@@ -61,7 +61,8 @@ class AutocompleteConfigProvider implements ConfigProviderInterface
         $config['shipperhq_autocomplete'] = [
             'active'        => $this->helper->getConfigValue('shipping/shipper_autocomplete/active'),
             'api_key'  =>    $this->helper->getConfigValue('shipping/shipper_autocomplete/google_api_key'),
-            'use_geolocation'  =>    $this->helper->getConfigValue('shipping/shipper_autocomplete/use_geolocation')
+            'use_geolocation'  =>    $this->helper->getConfigValue('shipping/shipper_autocomplete/use_geolocation'),
+            'use_long_postcode'  =>    $this->helper->getConfigValue('shipping/shipper_autocomplete/use_long_postcode')
         ];
         return $config;
     }
