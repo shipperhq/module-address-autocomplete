@@ -24,7 +24,8 @@ For more information see [ShipperHQ](https://shipperhq.com/magento2).
 
 Compatibility
 -------------
-- Magento >= 2.0 (Incl 2.2)
+- Magento >= 2.2
+- Supports both Magento Opensource (Community) and Magento Commerce (Enterprise)
 
 Installation Instructions
 -------------------------
