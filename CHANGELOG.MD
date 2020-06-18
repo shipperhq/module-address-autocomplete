@@ -37,11 +37,12 @@ Updated README with grammar corrections
 
 ## 20.1.3
 SHQ18-65 - handle Google API authentication errors
+
 ## 20.2.1 (2018-07-27)
 SHQ18-260 Disable Google Chrome autofill if address lookup is enabled
-
 
 ## 20.3.0 (2018-12-18)
 Added a setting to use extended postcodes when available
 
-
+## 20.3.1 (2020-06-18)
+MNB-401 Fix rendering of popup on 2.3.4+ for logged in customers

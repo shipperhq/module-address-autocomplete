@@ -2,7 +2,7 @@
     "name": "shipperhq/module-address-autocomplete",
     "description": "ShipperHQ Address Autocomplete Tool",
     "type": "magento2-module",
-    "version": "20.3.0",
+    "version": "20.3.1",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
