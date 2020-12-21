@@ -1,3 +1,13 @@
+/*
+ * Shipper HQ
+ *
+ * @category ShipperHQ
+ * @package ShipperHQ_AddressAutocomplete
+ * @copyright Copyright (c) 2020 Zowta LTD and Zowta LLC (http://www.ShipperHQ.com)
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @author ShipperHQ Team sales@shipperhq.com
+ */
+
 define([
     'jquery',
     'uiComponent',
@@ -117,7 +127,7 @@ define([
                         $('#'+thisDomID).val(postcode + postcodeSuffix);
                         $('#'+thisDomID).trigger('change');
                     }
-                } else if (addressType == 'postal_code_suffix' && window.checkoutConfig.shipperhq_autocomplete.use_long_postcode) {
+                } else if (addressType == 'postal_code_suffix' && window.checkoutConfig.shipperhq_autocomplete.use_long_postcode === '1') {
                     postcodeSuffix = '-' + value;
                     var thisDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode').uid
                     if ($('#'+thisDomID)) {
