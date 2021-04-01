@@ -123,23 +123,25 @@ define([
                 } else if (addressType == 'postal_code') {
                     postcode = value;
                     var thisDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode').uid
-                    if ($('#'+thisDomID)) {
+                    if ($('#'+thisDomID).length) {
                         $('#'+thisDomID).val(postcode + postcodeSuffix);
                         $('#'+thisDomID).trigger('change');
                     }
                 } else if (addressType == 'postal_code_suffix' && window.checkoutConfig.shipperhq_autocomplete.use_long_postcode === '1') {
                     postcodeSuffix = '-' + value;
                     var thisDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.postcode').uid
-                    if ($('#'+thisDomID)) {
+                    if ($('#'+thisDomID).length) {
                         $('#'+thisDomID).val(postcode + postcodeSuffix);
                         $('#'+thisDomID).trigger('change');
                     }
                 } else {
                     var elementId = lookupElement[addressType];
-                    var thisDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.'+ elementId).uid;
-                    if ($('#'+thisDomID)) {
-                        $('#'+thisDomID).val(value);
-                        $('#'+thisDomID).trigger('change');
+                    if (elementId !== undefined) {
+                        var thisDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.' + elementId).uid;
+                        if ($('#' + thisDomID).length) {
+                            $('#' + thisDomID).val(value);
+                            $('#' + thisDomID).trigger('change');
+                        }
                     }
                 }
             }
@@ -148,20 +150,20 @@ define([
             street[0] = streetNumber;
             var domID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
             var streetString = street.join(' ');
-            if ($('#'+domID)) {
+            if ($('#'+domID).length) {
                 $('#'+domID).val(streetString);
                 $('#'+domID).trigger('change');
             }
         }
         var cityDomID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.city').uid;
-        if ($('#'+cityDomID)) {
+        if ($('#'+cityDomID).length) {
             $('#'+cityDomID).val(city);
             $('#'+cityDomID).trigger('change');
         }
         if (region != '') {
             if (uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id')) {
                 var regionDomId = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id').uid;
-                if ($('#'+regionDomId)) {
+                if ($('#'+regionDomId).length) {
                     //search for and select region using text
                     $('#'+regionDomId +' option')
                         .filter(function () {
@@ -173,7 +175,7 @@ define([
             }
             if (uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id_input')) {
                 var regionDomId = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id_input').uid;
-                if ($('#'+regionDomId)) {
+                if ($('#'+regionDomId).length) {
                     $('#'+regionDomId).val(region);
                     $('#'+regionDomId).trigger('change');
                 }
