@@ -23,47 +23,62 @@
  *
  * @category  ShipperHQ
  * @package   ShipperHQ_Address_Autocomplete
- * @copyright Copyright (c) 2017 Zowta LLC (http://www.ShipperHQ.com)
+ * @copyright Copyright (c) 2021 Zowta LLC (http://www.ShipperHQ.com)
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @author    ShipperHQ Team sales@shipperhq.com
  */
 /**
  * Copyright © 2015 Magento. All rights reserved.
  * See COPYING.txt for license details.
+ *
+*/
+
+namespace ShipperHQ\AddressAutocomplete\Helper;
+
+
+/**
+ * Shipping data helper
  */
-
-namespace ShipperHQ\AddressAutocomplete\Model;
-
-use Magento\Checkout\Model\ConfigProviderInterface;
-
-class AutocompleteConfigProvider implements ConfigProviderInterface
+class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    /**
-     * @var \ShipperHQ\AddressAutocomplete\Helper\Data
-     */
-    private $helper;
 
+    private $storeId;
     /**
-     * @param \ShipperHQ\AddressAutocomplete\Helper\Data $helper
+     * @var Mage_Sales_Model_Quote
      */
+
+
     public function __construct(
-        \ShipperHQ\AddressAutocomplete\Helper\Data $helper
+        \Magento\Framework\App\Helper\Context $context
     ) {
+        parent::__construct($context);
+    }
 
-        $this->helper = $helper;
+
+    /**
+     * Gets a config flag
+     *
+     * @param $configField
+     * @return mixed
+     */
+    public function getConfigFlag($configField)
+    {
+        return $this->scopeConfig->isSetFlag($configField, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     /**
-     * {@inheritdoc}
+     * Get Config Value
+     *
+     * @param $configField
+     * @return mixed
      */
-    public function getConfig()
+    public function getConfigValue($configField, $store = null)
     {
-        $config['shipperhq_autocomplete'] = [
-            'active'        => $this->helper->getConfigValue('shipping/shipper_autocomplete/active'),
-            'api_key'  =>    $this->helper->getConfigValue('shipping/shipper_autocomplete/google_api_key'),
-            'use_geolocation'  =>    $this->helper->getConfigValue('shipping/shipper_autocomplete/use_geolocation'),
-            'use_long_postcode'  =>    $this->helper->getConfigValue('shipping/shipper_autocomplete/use_long_postcode')
-        ];
-        return $config;
+        return $this->scopeConfig->getValue(
+            $configField,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $store
+        );
     }
+
 }

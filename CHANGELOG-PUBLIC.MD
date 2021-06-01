@@ -57,3 +57,7 @@ MNB-532 Fix use long zip option
 MNB-1058 Fix conditionals and fix issue with whole address printing in street line 1
 
 
+## 20.4.0 (2021-06-01)
+RIV-534 support Enhanced Checkout
+
+
