@@ -46,6 +46,9 @@ define([
 
     var googleMapError = false;
     window.gm_authFailure = function() {
+        $('input[name^="street"]').prop('disabled', false).prop('placeholder', '').removeAttr("style")
+        google.maps.event.clearInstanceListeners($('input[name^="street"]')[0]);
+        $(".pac-container").remove();
         googleMapError = true;
     };
 
