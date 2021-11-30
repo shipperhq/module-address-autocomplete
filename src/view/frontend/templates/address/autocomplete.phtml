@@ -1,0 +1,141 @@
+<?php
+
+/*
+ * Shipper HQ
+ *
+ * @category ShipperHQ
+ * @package ShipperHQ_AddressAutocomplete
+ * @copyright Copyright (c) 2020 Zowta LTD and Zowta LLC (http://www.ShipperHQ.com)
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @author ShipperHQ Team sales@shipperhq.com
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var $viewModel ShipperHQ\AddressAutocomplete\ViewModel\Autocomplete */
+
+$viewModel = $block->getViewModel();
+
+?>
+<script>
+    (function () {
+        if (typeof window.CustomEvent === "function") return false;
+
+        function CustomEvent(event, params) {
+            params = params || {bubbles: false, cancelable: false, detail: undefined};
+            var evt = document.createEvent('CustomEvent');
+            evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+            return evt;
+        }
+
+        CustomEvent.prototype = window.Event.prototype;
+        window.CustomEvent = CustomEvent;
+    })();
+
+    var placeSearch, autocomplete;
+    var componentForm = {
+        street_number: 'short_name',
+        route: 'long_name',
+        locality: 'long_name',
+        administrative_area_level_1: 'long_name',
+        country: 'short_name',
+        postal_code: 'short_name',
+        postal_town: 'short_name',
+        sublocality_level_1: 'short_name'
+    };
+
+    var lookupElement = {
+        street_number: 'street_1',
+        route: 'street_2',
+        locality: 'city',
+        administrative_area_level_1: 'region',
+        country: 'country',
+        postal_code: 'zip'
+    }
+
+    function initAutocomplete() {
+        var input = document.getElementById('street_1');
+        input.addEventListener('focus', geolocate, true);
+
+        autocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */(document.getElementById('street_1')),
+            {types: ['geocode']});
+
+        autocomplete.addListener('place_changed', fillInAddress);
+    }
+
+    function fillInAddress() {
+        var place = autocomplete.getPlace();
+
+        var street = [];
+        var region = '';
+        var city = '';
+        for (var i = 0; i < place.address_components.length; i++) {
+            var addressType = place.address_components[i].types[0];
+            if (componentForm[addressType]) {
+                var val = place.address_components[i][componentForm[addressType]];
+                if (addressType == 'street_number') {
+                    street[0] = val;
+                } else if (addressType == 'route') {
+                    street[1] = val;
+                } else if (addressType == 'administrative_area_level_1') {
+                    region = val;
+                } else if (addressType == 'sublocality_level_1') {
+                    city = val;
+                } else if (addressType == 'postal_town') {
+                    city = val;
+                } else if (addressType == 'locality' && city == '') {
+                    //ignore if we are using one of other city values already
+                    city = val;
+                } else {
+                    var elementId = lookupElement[addressType];
+                    document.getElementById(elementId).value = val;
+                    if (addressType == 'country') {
+                        document.getElementById(elementId).dispatchEvent(new window.CustomEvent('change'));
+                    }
+                }
+            }
+        }
+        if (street.length > 0) {
+            document.getElementById('street_1').value = street.join(' ');
+        }
+        document.getElementById('city').value = city;
+        if (region != '') {
+            if (document.getElementById('region_id')) {
+                var regionSelector = document.getElementById('region_id');
+                for (i = 0; i < regionSelector.length; i++) {
+                    if (regionSelector.options[i].text === region) {
+                        regionSelector.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            if (document.getElementById('region')) {
+                document.getElementById('region').value = region;
+
+            }
+
+
+        }
+    }
+
+    function geolocate() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var geolocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                var circle = new google.maps.Circle({
+                    center: geolocation,
+                    radius: position.coords.accuracy
+                });
+                autocomplete.setBounds(circle.getBounds());
+            });
+        }
+    }
+
+</script>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=<?php echo $viewModel->getConfig('shipping/shipper_autocomplete/google_api_key') ?>&libraries=places&callback=initAutocomplete"
+    async defer></script>
