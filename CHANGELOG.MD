@@ -61,3 +61,7 @@ MNB-1058 Fix conditionals and fix issue with whole address printing in street li
 RIV-534 support Enhanced Checkout
 
 
+## 20.5.0 (2021-11-30)
+MNB-1843 User submitted enhancement to refactor add new address UI. MNB-1789 Fix for street address becoming uneditable on Google API error
+
+

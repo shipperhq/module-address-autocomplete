@@ -53,6 +53,27 @@ $viewModel = $block->getViewModel();
         postal_code: 'zip'
     }
 
+    window.gm_authFailure = function() {
+        document.getElementById('street_1').setAttribute('placeholder', '');
+        document.getElementById('street_1').removeAttribute("style");
+        document.getElementById('street_1').removeAttribute("disabled")
+        google.maps.event.clearInstanceListeners(document.getElementById('street_1'));
+        removeElementsByClass("pac-container")
+    };
+
+    /**
+     * Removes element by class name. Credit to
+     * https://stackoverflow.com/questions/4777077/removing-elements-by-class-name
+     *
+     * @param className
+     */
+    function removeElementsByClass(className){
+        const elements = document.getElementsByClassName(className);
+        while(elements.length > 0){
+            elements[0].parentNode.removeChild(elements[0]);
+        }
+    }
+
     function initAutocomplete() {
         var input = document.getElementById('street_1');
         input.addEventListener('focus', geolocate, true);
