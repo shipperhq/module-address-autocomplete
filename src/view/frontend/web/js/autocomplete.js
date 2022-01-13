@@ -164,7 +164,7 @@ define([
             $('#'+cityDomID).trigger('change');
         }
         if (region != '') {
-            // L3 - AutoComplete does not fill in Quebec field when an accent mark is returned from google
+            // MNB-1966 - AutoComplete does not fill in Quebec field when an accent mark is returned from google
             if (region == 'Québec') {
                 region = 'Quebec'
             }
