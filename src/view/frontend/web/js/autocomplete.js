@@ -164,6 +164,10 @@ define([
             $('#'+cityDomID).trigger('change');
         }
         if (region != '') {
+            // MNB-1966 AutoComplete does not fill in Quebec field when an accent mark is returned from google
+            if (region == 'Québec') {
+                region = 'Quebec'
+            }
             if (uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id')) {
                 var regionDomId = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id').uid;
                 if ($('#'+regionDomId).length) {
