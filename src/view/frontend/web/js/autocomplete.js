@@ -168,6 +168,7 @@ define([
             if (region == 'Québec') {
                 region = 'Quebec'
             }
+
             if (uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id')) {
                 var regionDomId = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.region_id').uid;
                 if ($('#'+regionDomId).length) {

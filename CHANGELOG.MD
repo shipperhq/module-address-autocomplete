@@ -65,3 +65,7 @@ RIV-534 support Enhanced Checkout
 MNB-1843 User submitted enhancement to refactor add new address UI. MNB-1789 Fix for street address becoming uneditable on Google API error
 
 
+## 20.5.1 (2022-01-17)
+MNB-1966 Fix for Quebec not populating and added CSP whitelist
+
+
