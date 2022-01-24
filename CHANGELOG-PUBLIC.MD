@@ -69,3 +69,7 @@ MNB-1843 User submitted enhancement to refactor add new address UI. MNB-1789 Fix
 MNB-1966 Fix for Quebec not populating and added CSP whitelist
 
 
+## 20.6.0 (2022-01-24)
+MNB-574 Add support for placing house number after street name
+
+
