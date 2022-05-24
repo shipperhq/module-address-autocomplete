@@ -133,8 +133,9 @@ define(
                         city = value;
                     } else if (addressType === 'postal_town') {
                         city = value;
-                    } else if (addressType === 'locality' && city === '') {
+                    } else if (addressType === 'locality' && (city === '' || value === 'Montréal')) {
                         // Ignore if we are using one of other city values already.
+                        // MNB-2364 Google returns sublocality_level_1 for Montreal. Always want to use Montreal
                         city = value;
                     } else if (addressType === 'postal_code') {
                         postcode      = value;

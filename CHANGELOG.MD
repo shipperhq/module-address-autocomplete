@@ -73,3 +73,7 @@ MNB-1966 Fix for Quebec not populating and added CSP whitelist
 MNB-574 Add support for placing house number after street name
 
 
+## 20.6.1 (2022-05-24)
+MNB-2364 Resolve issue with Montreal not being populated as city
+
+
