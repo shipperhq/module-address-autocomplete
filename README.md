@@ -27,15 +27,15 @@ Installation Instructions
 -------------------------
 Install using composer by adding to your composer file using commands:
 
-1. composer require shipperhq/module-address-autocomplete
-2. composer update
-3. bin/magento setup:upgrade
+1. `composer require shipperhq/module-address-autocomplete`
+2. `composer update`
+3. `bin/magento setup:upgrade`
 
 We recommend you also install our logging module
 
-1. composer require shipperhq/module-logger
-2. composer update
-3. bin/magento setup:upgrade
+1. `composer require shipperhq/module-logger`
+2. `composer update`
+3. `bin/magento setup:upgrade`
 
 Further information is available from [our help documentation](http://docs.shipperhq.com/installing-the-shipperhq-address-autocomplete-extension/)
 
