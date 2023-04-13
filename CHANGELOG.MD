@@ -77,3 +77,7 @@ MNB-574 Add support for placing house number after street name
 MNB-2364 Resolve issue with Montreal not being populated as city
 
 
+## 20.6.2 (2023-04-13)
+SHQ23-326 Fix issue with formatting of US addresses containing an apartment or suite number
+
+

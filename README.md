@@ -21,7 +21,25 @@ You will need a Google API key that has been enabled with “Google Places API W
 
 Compatibility
 -------------
-- Magento >= 2.3
+This module supports and is tested against the following Magento versions:
+
+* 2.4.5-p1
+* 2.4.5
+* 2.4.4-p2
+* 2.4.4-p1
+* 2.4.4
+* 2.4.3-p3
+* 2.4.3-p2
+* 2.4.3
+* 2.4.2
+* 2.4.1
+* 2.4.0
+
+per the [official Magento 2 requirements](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/system-requirements.html)
+
+Supports both Magento Opensource (Community) and Magento Commerce (Enterprise)
+
+Compatibility with earlier editions is possible but not maintained.
 
 Installation Instructions
 -------------------------

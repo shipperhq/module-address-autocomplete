@@ -116,15 +116,17 @@ define(
             var city           = '';
             var postcode       = '';
             var postcodeSuffix = '';
+            var subpremise    = ''; // This is apartment/unit/flat number etc
+            var countryId      = '';
 
             for (var i = 0; i < place.address_components.length; i++) {
                 var addressType = place.address_components[i].types[0];
                 if (componentForm[addressType]) {
                     var value = place.address_components[i][componentForm[addressType]];
                     if (addressType === 'subpremise') {
-                        streetNumber = value + '/';
+                        subpremise = value;
                     } else if (addressType === 'street_number') {
-                        streetNumber = streetNumber + value;
+                        streetNumber = value;
                     } else if (addressType === 'route') {
                         street[1] = value;
                     } else if (addressType === 'administrative_area_level_1') {
@@ -161,12 +163,18 @@ define(
                             }
 
                             if (elementId === 'country_id') {
-                                numberAfterStreet = numberAfterStreetCountries.includes(value);
+                                countryId = value;
+                                numberAfterStreet = numberAfterStreetCountries.includes(countryId);
                             }
                         }
                     }//end if
                 }//end if
             }//end for
+
+            // SHQ23-326 US Address Format is street address, unit or apartment number
+            if (subpremise.length > 0 && countryId !== 'US') {
+                streetNumber = subpremise + '/' + streetNumber;
+            }
 
             if (street.length > 0) {
                 if (numberAfterStreet) {
@@ -178,6 +186,11 @@ define(
 
                 var domID        = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
                 var streetString = street.join(' ');
+
+                if (countryId === 'US') {
+                    streetString += ', ' + subpremise
+                }
+
                 if ($('#' + domID).length) {
                     $('#' + domID).val(streetString);
                     $('#' + domID).trigger('change');
