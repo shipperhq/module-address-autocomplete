@@ -188,7 +188,7 @@ define(
                 var streetString = street.join(' ');
 
                 if (countryId === 'US') {
-                    streetString += ' ' + subpremise
+                    streetString += subpremise
                 }
 
                 if ($('#' + domID).length) {
