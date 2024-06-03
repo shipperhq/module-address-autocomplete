@@ -23,8 +23,15 @@ Compatibility
 -------------
 This module supports and is tested against the following Magento versions:
 
+* 2.4.7-beta1
+* 2.4.6-p1
+* 2.4.6
+* 2.4.5-p3
+* 2.4.5-p2
 * 2.4.5-p1
 * 2.4.5
+* 2.4.4-p4
+* 2.4.4-p3
 * 2.4.4-p2
 * 2.4.4-p1
 * 2.4.4

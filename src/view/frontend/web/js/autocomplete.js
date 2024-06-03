@@ -187,7 +187,7 @@ define(
                 var domID        = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
                 var streetString = street.join(' ');
 
-                if (countryId === 'US') {
+                if (countryId === 'US' && subpremise !== '') {
                     streetString += ', ' + subpremise
                 }
 

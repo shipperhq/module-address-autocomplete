@@ -81,3 +81,7 @@ MNB-2364 Resolve issue with Montreal not being populated as city
 SHQ23-326 Fix issue with formatting of US addresses containing an apartment or suite number
 
 
+## 20.6.3 (2024-06-03)
+SHQ23-2640 Remove trailing comma from stress address
+
+
