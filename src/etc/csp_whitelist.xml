@@ -16,6 +16,11 @@
                 <value id="maps.googleapis.com" type="host">maps.googleapis.com</value>
             </values>
         </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="maps.googleapis.com" type="host">maps.googleapis.com</value>
+            </values>
+        </policy>
         <policy id="img-src">
             <values>
                 <value id="maps.gstatic" type="host">maps.gstatic.com</value>
