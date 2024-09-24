@@ -34,6 +34,7 @@ $viewModel = $block->getViewModel();
 
     var placeSearch, autocomplete;
     var componentForm = {
+        subpremise: 'short_name',
         street_number: 'short_name',
         route: 'long_name',
         locality: 'long_name',
@@ -52,6 +53,10 @@ $viewModel = $block->getViewModel();
         country: 'country',
         postal_code: 'zip'
     }
+
+    // MNB-574 Some European countries place the house number after the street name rather than before.
+    var numberAfterStreetCountries = ['AT', 'BE', 'DK', 'DE', 'GR', 'IS', 'IT', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH'];
+
 
     window.gm_authFailure = function() {
         document.getElementById('street_1').setAttribute('placeholder', '');
@@ -90,34 +95,55 @@ $viewModel = $block->getViewModel();
 
         var street = [];
         var region = '';
+        var streetNumber = '';
         var city = '';
+        var subpremise = ''; // This is apartment/unit/flat number etc
+        var countryId = '';
+
         for (var i = 0; i < place.address_components.length; i++) {
             var addressType = place.address_components[i].types[0];
             if (componentForm[addressType]) {
                 var val = place.address_components[i][componentForm[addressType]];
-                if (addressType == 'street_number') {
-                    street[0] = val;
-                } else if (addressType == 'route') {
+                if (addressType === 'subpremise') {
+                    subpremise = val;
+                } else if (addressType === 'street_number') {
+                    streetNumber = val;
+                } else if (addressType === 'route') {
                     street[1] = val;
-                } else if (addressType == 'administrative_area_level_1') {
+                } else if (addressType === 'administrative_area_level_1') {
                     region = val;
-                } else if (addressType == 'sublocality_level_1') {
+                } else if (addressType === 'sublocality_level_1') {
                     city = val;
-                } else if (addressType == 'postal_town') {
+                } else if (addressType === 'postal_town') {
                     city = val;
-                } else if (addressType == 'locality' && city == '') {
-                    //ignore if we are using one of other city values already
+                } else if (addressType === 'locality' && (city === '' || value === 'Montréal')) {
+                    // Ignore if we are using one of other city values already.
+                    // MNB-2364 Google returns sublocality_level_1 for Montreal. Always want to use Montreal
                     city = val;
                 } else {
                     var elementId = lookupElement[addressType];
                     document.getElementById(elementId).value = val;
                     if (addressType == 'country') {
+                        countryId = val;
                         document.getElementById(elementId).dispatchEvent(new window.CustomEvent('change'));
                     }
                 }
             }
         }
+
+        // SHQ23-326 US Address Format is street address, unit or apartment number
+        if (subpremise.length > 0 && countryId !== 'US') {
+            streetNumber = subpremise + '/' + streetNumber;
+        }
+
         if (street.length > 0) {
+            if (numberAfterStreetCountries.includes(countryId)) {
+                street[0] = street[1];
+                street[1] = streetNumber;
+            } else {
+                street[0] = streetNumber;
+            }
+
             document.getElementById('street_1').value = street.join(' ');
         }
         document.getElementById('city').value = city;
