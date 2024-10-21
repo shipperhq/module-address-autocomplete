@@ -57,7 +57,6 @@ $viewModel = $block->getViewModel();
     // MNB-574 Some European countries place the house number after the street name rather than before.
     var numberAfterStreetCountries = ['AT', 'BE', 'DK', 'DE', 'GR', 'IS', 'IT', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH'];
 
-
     window.gm_authFailure = function() {
         document.getElementById('street_1').setAttribute('placeholder', '');
         document.getElementById('street_1').removeAttribute("style");
@@ -144,8 +143,15 @@ $viewModel = $block->getViewModel();
                 street[0] = streetNumber;
             }
 
-            document.getElementById('street_1').value = street.join(' ');
+            var streetString = street.join(' ');
+
+            if (countryId === 'US' && subpremise !== '') {
+                streetString += ', ' + subpremise
+            }
+
+            document.getElementById('street_1').value = streetString;
         }
+
         document.getElementById('city').value = city;
         if (region != '') {
             if (document.getElementById('region_id')) {
@@ -157,12 +163,10 @@ $viewModel = $block->getViewModel();
                     }
                 }
             }
+
             if (document.getElementById('region')) {
                 document.getElementById('region').value = region;
-
             }
-
-
         }
     }
 

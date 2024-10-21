@@ -89,3 +89,7 @@ SHQ23-2640 Remove trailing comma from stress address
 SHQ23-3384 Add Google domain to connect-src in csp_whitelist.xml
 
 
+## 20.6.5 (2024-10-21)
+SHQ23-3585 Fix issue with apartment numbers being omitted in address book
+
+
