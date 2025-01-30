@@ -1,99 +1,87 @@
 # ShipperHQ Address Auto-Complete
-Add address lookup to your Magento 2 site using the simple tool, harnessing Google's Address Auto-Complete API.
 
-You do not need a ShipperHQ account to use this extension. For more information on ShipperHQ capabilities are available at [ShipperHQ](https://shipperhq.com/magento2)
+The ShipperHQ Address Auto-Complete extension enhances Magento 2 stores by integrating Google's Address Auto-Complete API. This extension simplifies the checkout process by enabling address lookup functionality, improving user experience, and reducing address entry errors.
 
-Facts
------
-- [extension on GitHub](https://github.com/shipperhq/module-address-autocomplete)
+You do **not** need a ShipperHQ account to use this extension. More information on ShipperHQ capabilities is available at [ShipperHQ](https://shipperhq.com/magento2).
 
-Description
------------
-ShipperHQ Address Auto-Complete will install a simple extension in Magento 2. No ShipperHQ account is necessary and it's free to use.
+---
 
-The extension features address auto-complete for:
+## Features
 
-1. Guest checkout support for entering shipping address
-2. Logged in customer entering a new address in their address book
-3. Logged in customer entering a new shipping address at checkout
+- **Seamless Address Auto-Complete**: Instantly suggest addresses as customers type.
+- **Guest & Logged-In Customer Support**:
+    - Auto-complete available for guest checkout shipping addresses.
+    - Auto-complete for logged-in users adding a new address to their address book.
+    - Supports new shipping address entry at checkout.
+- **Google API Integration**: Requires a Google API key with access to the *Google Places API Web Service*.
 
-You will need a Google API key that has been enabled with “Google Places API Web Service” access
+---
 
-Compatibility
--------------
-This module supports and is tested against the following Magento versions:
+## Requirements
 
-* 2.4.7-beta1
-* 2.4.6-p1
-* 2.4.6
-* 2.4.5-p3
-* 2.4.5-p2
-* 2.4.5-p1
-* 2.4.5
-* 2.4.4-p4
-* 2.4.4-p3
-* 2.4.4-p2
-* 2.4.4-p1
-* 2.4.4
-* 2.4.3-p3
-* 2.4.3-p2
-* 2.4.3
-* 2.4.2
-* 2.4.1
-* 2.4.0
+- Magento 2.4.4+
+    - Compatibility with earlier editions is possible but not maintained
+    - Supports both Magento Opensource (Community) and Magento Commerce (Enterprise)
 
-per the [official Magento 2 requirements](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/system-requirements.html)
+---
 
-Supports both Magento Opensource (Community) and Magento Commerce (Enterprise)
+## Installation
 
-Compatibility with earlier editions is possible but not maintained.
+Install using Composer by running the following commands:
 
-Installation Instructions
--------------------------
-Install using composer by adding to your composer file using commands:
+```bash
+composer require shipperhq/module-address-autocomplete
+composer update
+php bin/magento setup:upgrade
+```
 
-1. `composer require shipperhq/module-address-autocomplete`
-2. `composer update`
-3. `bin/magento setup:upgrade`
+We recommend installing the ShipperHQ Logging module for enhanced debugging:
 
-We recommend you also install our logging module
+```bash
+composer require shipperhq/module-logger
+composer update
+php bin/magento setup:upgrade
+```
 
-1. `composer require shipperhq/module-logger`
-2. `composer update`
-3. `bin/magento setup:upgrade`
+---
 
-Further information is available from [our help documentation](http://docs.shipperhq.com/installing-the-shipperhq-address-autocomplete-extension/)
+## Configuration
 
-Configuration Instructions
--------------------------
+1. Navigate to `Stores > Configuration > Sales > Shipping Settings`.
+2. Open the **ShipperHQ Address Auto-Complete** tab and enable the extension.
+3. Enter your **Google API Key**. If you do not have one, register and ensure you have enabled the *Google Places API Web Service* on your [Google account](https://developers.google.com/maps/documentation/places/web-service/get-api-key).
+4. Save the configuration.
+5. Refresh the Magento cache from `System > Cache Management`.
 
-1. Once installed, go to Stores > Configuration > Sales > Shipping Settings
-2. Open ShipperHQ Address Autocomplete tab and enable the extension
-3. Enter your Google API key  – if you do not have a key, please register and ensure you have enabled the Google Places API services on your [Google account](https://developers.google.com/maps/documentation/places/web-service/get-api-key)
-4. Save the configuration
-5. Refresh the cache in Magento from System > Cache Management
+For further setup details, visit [our configuration guide](http://docs.shipperhq.com/configure-shipperhq-address-autocomplete/).
 
-Further information is available from [our help documentation](http://docs.shipperhq.com/configure-shipperhq-address-autocomplete/)
+---
 
-Limitations
--------
+## Limitations
 
-1. No support for address autocomplete on any admin forms
-2. No support for address autocomplete on the billing address
+- Address auto-complete is **not supported** on any admin forms.
+- Address auto-complete is **not available** for billing addresses.
 
-Support
--------
-If you have any issues with this extension, open an issue on [GitHub](https://github.com/shipperhq/module-address-autocomplete/issues).
-Alternatively you can contact us via email at support@shipperhq.com or via our website https://shipperhq.com/contact
+---
 
-Contribution
-------------
+## Support
+
+As a free extension, ShipperHQ Address Auto-Complete is provided as-is without support.
+
+---
+
+## Contribution
+
 Any contribution is highly appreciated. The best way to contribute code is to open a [pull request on GitHub](https://help.github.com/articles/using-pull-requests).
 
-License
--------
-See license files
+---
 
-Copyright
----------
-Copyright (c) 2015 Zowta LLC (http://www.ShipperHQ.com)
+## License
+
+See license files.
+
+---
+
+## Copyright
+
+Copyright (c) 2015 Zowta LLC ([ShipperHQ](http://www.ShipperHQ.com))
