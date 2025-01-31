@@ -93,3 +93,7 @@ SHQ23-3384 Add Google domain to connect-src in csp_whitelist.xml
 SHQ23-3585 Fix issue with apartment numbers being omitted in address book
 
 
+## 20.6.7 (2025-01-31)
+INFRA-893 Added missing build mp step
+
+
