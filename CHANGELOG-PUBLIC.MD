@@ -97,3 +97,7 @@ SHQ23-3585 Fix issue with apartment numbers being omitted in address book
 INFRA-893 Added missing build mp step
 
 
+## 20.6.8 (2025-02-06)
+SHQ23-4310 Fix error in customer address book phtml file
+
+

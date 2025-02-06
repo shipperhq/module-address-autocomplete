@@ -115,14 +115,14 @@ $viewModel = $block->getViewModel();
                     city = val;
                 } else if (addressType === 'postal_town') {
                     city = val;
-                } else if (addressType === 'locality' && (city === '' || value === 'Montréal')) {
+                } else if (addressType === 'locality' && (city === '' || val === 'Montréal')) {
                     // Ignore if we are using one of other city values already.
                     // MNB-2364 Google returns sublocality_level_1 for Montreal. Always want to use Montreal
                     city = val;
                 } else {
                     var elementId = lookupElement[addressType];
                     document.getElementById(elementId).value = val;
-                    if (addressType == 'country') {
+                    if (addressType === 'country') {
                         countryId = val;
                         document.getElementById(elementId).dispatchEvent(new window.CustomEvent('change'));
                     }
@@ -153,7 +153,7 @@ $viewModel = $block->getViewModel();
         }
 
         document.getElementById('city').value = city;
-        if (region != '') {
+        if (region !== '') {
             if (document.getElementById('region_id')) {
                 var regionSelector = document.getElementById('region_id');
                 for (i = 0; i < regionSelector.length; i++) {
