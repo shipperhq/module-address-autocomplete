@@ -1,18 +1,18 @@
 <?php
 
 /*
- * Shipper HQ
+ * ShipperHQ
  *
  * @category ShipperHQ
- * @package ShipperHQ_AddressAutocomplete
+ * @package ShipperHQ\AddressAutocomplete
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @author Lucas van Staden  sales@proxiblue.com.au
  */
 
 namespace ShipperHQ\AddressAutocomplete\ViewModel;
 
-use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\View\Element\Block\ArgumentInterface;
 
 class Autocomplete implements ArgumentInterface
 {
@@ -22,7 +22,8 @@ class Autocomplete implements ArgumentInterface
      */
     protected $_scopeConfig;
 
-    public function __construct(ScopeConfigInterface $scopeConfig) {
+    public function __construct(ScopeConfigInterface $scopeConfig)
+    {
         $this->_scopeConfig = $scopeConfig;
     }
 

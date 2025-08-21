@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * ShipperHQ
+ * ShipperHQ Address AutoComplete Module
  *
  * NOTICE OF LICENSE
  *
@@ -19,35 +19,32 @@
  * versions in the future. If you wish to customize Magento for your
  * needs please refer to http://www.magentocommerce.com for more information.
  *
- * Shipper HQ Shipping
+ * ShipperHQ
  *
  * @category  ShipperHQ
- * @package   ShipperHQ_Address_Autocomplete
+ * @package   ShipperHQ\AddressAutocomplete
  * @copyright Copyright (c) 2017 Zowta LLC (http://www.ShipperHQ.com)
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @author    ShipperHQ Team sales@shipperhq.com
- */
-/**
- * Copyright © 2015 Magento. All rights reserved.
- * See COPYING.txt for license details.
  */
 
 namespace ShipperHQ\AddressAutocomplete\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
+use ShipperHQ\AddressAutocomplete\Helper\Data;
 
 class AutocompleteConfigProvider implements ConfigProviderInterface
 {
     /**
-     * @var \ShipperHQ\AddressAutocomplete\Helper\Data
+     * @var Data
      */
     private $helper;
 
     /**
-     * @param \ShipperHQ\AddressAutocomplete\Helper\Data $helper
+     * @param Data $helper
      */
     public function __construct(
-        \ShipperHQ\AddressAutocomplete\Helper\Data $helper
+        Data $helper
     ) {
 
         $this->helper = $helper;

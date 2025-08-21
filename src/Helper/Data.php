@@ -19,38 +19,28 @@
  * versions in the future. If you wish to customize Magento for your
  * needs please refer to http://www.magentocommerce.com for more information.
  *
- * Shipper HQ Shipping
+ * ShipperHQ Shipping
  *
  * @category  ShipperHQ
- * @package   ShipperHQ_Address_Autocomplete
+ * @package   ShipperHQ\AddressAutocomplete
  * @copyright Copyright (c) 2021 Zowta LLC (http://www.ShipperHQ.com)
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @author    ShipperHQ Team sales@shipperhq.com
  */
-/**
- * Copyright © 2015 Magento. All rights reserved.
- * See COPYING.txt for license details.
- *
-*/
 
 namespace ShipperHQ\AddressAutocomplete\Helper;
 
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Shipping data helper
  */
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
-
     private $storeId;
-    /**
-     * @var Mage_Sales_Model_Quote
-     */
 
-
-    public function __construct(
-        \Magento\Framework\App\Helper\Context $context
-    ) {
+    public function __construct(\Magento\Framework\App\Helper\Context $context)
+    {
         parent::__construct($context);
     }
 
@@ -63,20 +53,21 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function getConfigFlag($configField)
     {
-        return $this->scopeConfig->isSetFlag($configField, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->isSetFlag($configField, ScopeInterface::SCOPE_STORE);
     }
 
     /**
      * Get Config Value
      *
      * @param $configField
+     * @param null $store
      * @return mixed
      */
     public function getConfigValue($configField, $store = null)
     {
         return $this->scopeConfig->getValue(
             $configField,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            ScopeInterface::SCOPE_STORE,
             $store
         );
     }

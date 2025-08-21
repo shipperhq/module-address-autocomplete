@@ -101,3 +101,7 @@ INFRA-893 Added missing build mp step
 SHQ23-4310 Fix error in customer address book phtml file
 
 
+## 20.6.9 (2025-08-21)
+SHQ23-5374 Fixing copyrights
+
+
