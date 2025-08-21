@@ -188,5 +188,5 @@ $viewModel = $block->getViewModel();
 
 </script>
 <script
-    src="https://maps.googleapis.com/maps/api/js?key=<?php echo $viewModel->getConfig('shipping/shipper_autocomplete/google_api_key') ?>&libraries=places&callback=initAutocomplete"
+    src="<?php echo $block->escapeUrl('https://maps.googleapis.com/maps/api/js?key=' . rawurlencode((string)$viewModel->getConfig('shipping/shipper_autocomplete/google_api_key')) . '&libraries=places&callback=initAutocomplete') ?>"
     async defer></script>
