@@ -75,6 +75,13 @@
                         ]]>
                     </comment>
                 </field>
+                <field id="autocomplete_billing_address" type="select" translate="label" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Autocomplete Billing Address</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[Enabling this will allow autocomplete on the billing address field.]]>
+                    </comment>
+                </field>
             </group>
         </section>
     </system>
