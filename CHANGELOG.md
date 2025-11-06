@@ -109,3 +109,7 @@ SHQ23-5374 Fixing copyrights
 SHQ23-5374 Fix unescaped output in phtml
 
 
+## 20.6.11 (2025-11-06)
+INFRA-1328 - Removed incorrect case-sensitive version of file
+
+
