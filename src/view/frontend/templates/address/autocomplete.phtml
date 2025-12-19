@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * ShipperHQ
  *
  * @category ShipperHQ
@@ -32,7 +32,7 @@ $viewModel = $block->getViewModel();
         window.CustomEvent = CustomEvent;
     })();
 
-    var placeSearch, autocomplete;
+    var placeSearch, autocomplete, placeAutocompleteElement;
     var componentForm = {
         subpremise: 'short_name',
         street_number: 'short_name',
@@ -58,11 +58,24 @@ $viewModel = $block->getViewModel();
     var numberAfterStreetCountries = ['AT', 'BE', 'DK', 'DE', 'GR', 'IS', 'IT', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH'];
 
     window.gm_authFailure = function() {
-        document.getElementById('street_1').setAttribute('placeholder', '');
-        document.getElementById('street_1').removeAttribute("style");
-        document.getElementById('street_1').removeAttribute("disabled")
-        google.maps.event.clearInstanceListeners(document.getElementById('street_1'));
-        removeElementsByClass("pac-container")
+        var street1 = document.getElementById('street_1');
+        if (street1) {
+            street1.setAttribute('placeholder', '');
+            street1.removeAttribute("style");
+            street1.removeAttribute("disabled");
+        }
+
+        // Cleanup new widget
+        if (placeAutocompleteElement && placeAutocompleteElement.remove) {
+            placeAutocompleteElement.remove();
+        }
+
+        // Cleanup legacy
+        if (google.maps && google.maps.event && street1) {
+            google.maps.event.clearInstanceListeners(street1);
+        }
+        removeElementsByClass("pac-container");
+        removeElementsByClass("shipperhq-place-autocomplete");
     };
 
     /**
@@ -78,19 +91,60 @@ $viewModel = $block->getViewModel();
         }
     }
 
-    function initAutocomplete() {
+    async function initAutocomplete() {
+        // Load the places library
+        await google.maps.importLibrary("places");
+
         var input = document.getElementById('street_1');
-        input.addEventListener('focus', geolocate, true);
+        if (!input) return;
 
-        autocomplete = new google.maps.places.Autocomplete(
-            /** @type {!HTMLInputElement} */(document.getElementById('street_1')),
-            {types: ['geocode']});
+        // Create wrapper for the PlaceAutocompleteElement
+        var wrapper = document.createElement('div');
+        wrapper.className = 'shipperhq-place-autocomplete-field';
+        wrapper.style.marginBottom = '10px';
 
-        autocomplete.addListener('place_changed', fillInAddress);
+        var parent = input.parentElement;
+        parent.insertBefore(wrapper, input.parentElement.firstChild);
+
+        // Create the PlaceAutocompleteElement
+        placeAutocompleteElement = new google.maps.places.PlaceAutocompleteElement();
+        placeAutocompleteElement.classList.add('shipperhq-place-autocomplete');
+        placeAutocompleteElement.style.width = '100%';
+        wrapper.appendChild(placeAutocompleteElement);
+
+        // Add focus handler for geolocation
+        placeAutocompleteElement.addEventListener('focus', geolocate);
+
+        // Handle selection - using 'gmp-select' event
+        placeAutocompleteElement.addEventListener('gmp-select', async function(event) {
+            try {
+                var place = event.placePrediction.toPlace();
+                await place.fetchFields({ fields: ['addressComponents'] });
+                fillInAddress(place);
+            } catch (e) {
+                console.error('ERROR: Failed to fetch place details', e);
+            }
+        });
     }
 
-    function fillInAddress() {
-        var place = autocomplete.getPlace();
+    function fillInAddress(place) {
+        // Handle both legacy (address_components) and new (addressComponents) API
+        var addressComponents = place.address_components || [];
+        if (place.addressComponents) {
+            // Convert new format to legacy format for minimal code changes
+            addressComponents = [];
+            for (var aci = 0; aci < place.addressComponents.length; aci++) {
+                var comp = place.addressComponents[aci];
+                if (!comp || !comp.types) continue;
+                for (var ti = 0; ti < comp.types.length; ti++) {
+                    addressComponents.push({
+                        types: [comp.types[ti]],
+                        short_name: comp.shortText,
+                        long_name: comp.longText
+                    });
+                }
+            }
+        }
 
         var street = [];
         var region = '';
@@ -99,10 +153,10 @@ $viewModel = $block->getViewModel();
         var subpremise = ''; // This is apartment/unit/flat number etc
         var countryId = '';
 
-        for (var i = 0; i < place.address_components.length; i++) {
-            var addressType = place.address_components[i].types[0];
+        for (var i = 0; i < addressComponents.length; i++) {
+            var addressType = addressComponents[i].types[0];
             if (componentForm[addressType]) {
-                var val = place.address_components[i][componentForm[addressType]];
+                var val = addressComponents[i][componentForm[addressType]];
                 if (addressType === 'subpremise') {
                     subpremise = val;
                 } else if (addressType === 'street_number') {
@@ -177,16 +231,61 @@ $viewModel = $block->getViewModel();
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
-                var circle = new google.maps.Circle({
-                    center: geolocation,
-                    radius: position.coords.accuracy
-                });
-                autocomplete.setBounds(circle.getBounds());
+
+                if (placeAutocompleteElement) {
+                    // New API uses locationBias instead of setBounds
+                    placeAutocompleteElement.locationBias = {
+                        center: geolocation,
+                        radius: position.coords.accuracy
+                    };
+                } else if (autocomplete && autocomplete.setBounds) {
+                    // Fallback for legacy API
+                    var circle = new google.maps.Circle({
+                        center: geolocation,
+                        radius: position.coords.accuracy
+                    });
+                    autocomplete.setBounds(circle.getBounds());
+                }
             });
         }
     }
 
 </script>
-<script
-    src="<?php echo $block->escapeUrl('https://maps.googleapis.com/maps/api/js?key=' . rawurlencode((string)$viewModel->getConfig('shipping/shipper_autocomplete/google_api_key')) . '&libraries=places&callback=initAutocomplete') ?>"
-    async defer></script>
+<script>
+    // Google's inline bootstrap loader for dynamic library import
+    (function(apiKey) {
+        var g = {
+            key: apiKey,
+            v: "weekly"
+        };
+        var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+            m = document, b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+        u = () => h || (h = new Promise(async (f, n) => {
+            await (a = m.createElement("script"));
+            e.set("libraries", [...r] + "");
+            for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+            e.set("callback", c + ".maps." + q);
+            a.src = `https://maps.googleapis.com/maps/api/js?` + e;
+            d[q] = f;
+            a.onerror = () => h = n(Error(p + " could not load."));
+            a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+            m.head.append(a);
+        }));
+        d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n));
+
+        // Wait for importLibrary to be available, then initialize
+        var checkInterval = setInterval(function() {
+            if (window.google && window.google.maps && typeof window.google.maps.importLibrary === 'function') {
+                clearInterval(checkInterval);
+                // Load core maps library, then initialize autocomplete
+                google.maps.importLibrary("maps").then(function() {
+                    if (typeof initAutocomplete === 'function') {
+                        initAutocomplete();
+                    }
+                });
+            }
+        }, 50);
+    })('<?php echo $viewModel->getConfig('shipping/shipper_autocomplete/google_api_key') ?>');
+</script>

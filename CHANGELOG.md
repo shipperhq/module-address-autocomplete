@@ -113,3 +113,7 @@ SHQ23-5374 Fix unescaped output in phtml
 INFRA-1328 - Removed incorrect case-sensitive version of file
 
 
+## 21.0.0 (2025-12-19)
+SHQ23-5984 Migrate to new Google Places API
+
+

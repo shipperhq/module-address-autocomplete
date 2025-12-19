@@ -1,11 +1,11 @@
-/*
+/**
  * ShipperHQ
  *
- * @category  ShipperHQ
- * @package   ShipperHQ\AddressAutocomplete
+ * @category ShipperHQ
+ * @package ShipperHQ\AddressAutocomplete
  * @copyright Copyright (c) 2020 Zowta LTD and Zowta LLC (http://www.ShipperHQ.com)
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @author    ShipperHQ Team sales@shipperhq.com
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @author ShipperHQ Team sales@shipperhq.com
  */
 
 define(
@@ -46,9 +46,23 @@ define(
         };
 
         var googleMapError    = false;
+        var placeAutocomplete = null;
         window.gm_authFailure = function () {
-            $('input[name^="street"]').prop('disabled', false).prop('placeholder', '').removeAttr("style")
-            google.maps.event.clearInstanceListeners($('input[name^="street"]')[0]);
+            $('input[name^="street"]').prop('disabled', false).prop('placeholder', '').removeAttr("style");
+
+            // Cleanup any Google widget we injected
+            try {
+                if (placeAutocomplete && placeAutocomplete.remove) {
+                    placeAutocomplete.remove();
+                } else {
+                    $('gmp-place-autocomplete.shipperhq-place-autocomplete').remove();
+                }
+            } catch (e) {}
+
+            // Legacy cleanup (no-op for the new widget)
+            if (google.maps && google.maps.event && $('input[name^="street"]').length) {
+                google.maps.event.clearInstanceListeners($('input[name^="street"]')[0]);
+            }
             $(".pac-container").remove();
             googleMapError = true;
         };
@@ -61,16 +75,35 @@ define(
             function () {
                 var enabled = window.checkoutConfig.shipperhq_autocomplete.active;
 
-                var geocoder = new google.maps.Geocoder();
-                setTimeout(
-                    function () {
-                        if (!googleMapError) {
-                            if (enabled === '1') {
-                                var domID = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street').elems()[0].uid;
+                function initializeWhenReady() {
+                    if (googleMapError || enabled !== '1') {
+                        return;
+                    }
 
-                                var street = $('#' + domID);
+                    var streetComponent = uiRegistry.get('checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset.street');
 
-                                // SHQ18-260.
+                    if (!streetComponent || !streetComponent.elems || !streetComponent.elems()[0]) {
+                        // Street field not ready yet, check again in 100ms
+                        setTimeout(initializeWhenReady, 100);
+                        return;
+                    }
+
+                    var domID = streetComponent.elems()[0].uid;
+                    var street = $('#' + domID);
+
+                    if (!street.length) {
+                        // DOM element not ready yet, check again in 100ms
+                        setTimeout(initializeWhenReady, 100);
+                        return;
+                    }
+
+                    // Street field is ready, initialize autocomplete
+                    initAutocomplete(domID, street);
+                }
+
+                function initAutocomplete(domID, street) {
+
+                                // SHQ18-260 Disable browser autofill to avoid conflicts
                                 var observer = new MutationObserver(
                                     function () {
                                         observer.disconnect();
@@ -90,16 +123,47 @@ define(
                                             }
                                         );
 
-                                        autocomplete = new google.maps.places.Autocomplete((this),{types: ['geocode']});
-                                        autocomplete.addListener('place_changed', fillInAddress);
+                                        google.maps.importLibrary('places').then(function () {
+                                            // Only inject once per checkout render.
+                                            if (!placeAutocomplete || !document.body.contains(placeAutocomplete)) {
+                                                placeAutocomplete = new google.maps.places.PlaceAutocompleteElement({});
+                                                placeAutocomplete.classList.add('shipperhq-place-autocomplete');
+                                                placeAutocomplete.style.width = '100%';
+
+                                                // Insert the widget above the street address line 1 field.
+                                                var $street = $(self);
+                                                var $field = $street.closest('.field');
+                                                var $wrapper = $('<div class="field shipperhq-place-autocomplete-field"><div class="control"></div></div>');
+                                                $wrapper.find('.control')[0].appendChild(placeAutocomplete);
+
+                                                if ($field.length) {
+                                                    $wrapper.insertBefore($field);
+                                                } else {
+                                                    $wrapper.insertBefore($street);
+                                                }
+
+                                                // Bias results to the user's location when focused.
+                                                placeAutocomplete.addEventListener('focus', geolocate);
+
+                                                // Handle user selection on the autocomplete widget.
+                                                placeAutocomplete.addEventListener('gmp-select', async function (event) {
+                                                    try {
+                                                        var place = event.placePrediction.toPlace();
+                                                        await place.fetchFields({ fields: ['addressComponents'] });
+                                                        fillInAddress(place);
+                                                    } catch (e) {
+                                                        console.error('ERROR: Failed to fetch place details', e);
+                                                    }
+                                                });
+                                            }
+                                        });
                                     }
                                 );
                                 $('#' + domID).focus(geolocate);
-                            }//end if
-                        }//end if
-                    },
-                    5000
-                );
+                }
+
+                // Start checking for street field availability
+                initializeWhenReady();
             }
         ).fail(
             function () {
@@ -107,8 +171,29 @@ define(
             }
         );
 
-        var fillInAddress = function () {
-            var place = autocomplete.getPlace();
+        var fillInAddress = function (place) {
+            // In the new Places widget flow, place is a google.maps.places.Place.
+            // Fall back to the legacy Autocomplete flow if needed.
+            place = place || (autocomplete && autocomplete.getPlace ? autocomplete.getPlace() : null);
+            if (!place) { return; }
+
+            // Normalize address components between legacy (address_components) and new (addressComponents) APIs.
+            if (!place.address_components && place.addressComponents) {
+                place.address_components = [];
+                for (var aci = 0; aci < place.addressComponents.length; aci++) {
+                    var comp = place.addressComponents[aci];
+                    if (!comp || !comp.types) { continue; }
+                    for (var ti = 0; ti < comp.types.length; ti++) {
+                        place.address_components.push({
+                            types: [comp.types[ti]],
+                            short_name: comp.shortText,
+                            long_name: comp.longText
+                        });
+                    }
+                }
+            }
+
+            if (!place.address_components) { return; }
 
             var street         = [];
             var region         = '';
@@ -214,11 +299,11 @@ define(
                     if ($('#' + regionDomId).length) {
                         // Search for and select region using text.
                         $('#' + regionDomId + ' option')
-                        .filter(
-                            function () {
-                                return $.trim($(this).text()) == region;
-                            }
-                        )
+                            .filter(
+                                function () {
+                                    return $.trim($(this).text()) == region;
+                                }
+                            )
                             .attr('selected',true);
                         $('#' + regionDomId).trigger('change');
                     }
@@ -242,13 +327,20 @@ define(
                             lat: position.coords.latitude,
                             lng: position.coords.longitude
                         };
-                        var circle      = new google.maps.Circle(
-                            {
+                        if (placeAutocomplete) {
+                            // PlaceAutocompleteElement uses locationBias/locationRestriction instead of setBounds().
+                            placeAutocomplete.locationBias = {
                                 center: geolocation,
                                 radius: position.coords.accuracy
-                            }
-                        );
-                        autocomplete.setBounds(circle.getBounds());
+                            };
+                        } else if (autocomplete && autocomplete.setBounds) {
+                            // Legacy fallback.
+                            var circle = new google.maps.Circle({
+                                center: geolocation,
+                                radius: position.coords.accuracy
+                            });
+                            autocomplete.setBounds(circle.getBounds());
+                        }
                     }
                 );
             }
