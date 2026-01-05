@@ -19,6 +19,7 @@
         <policy id="connect-src">
             <values>
                 <value id="maps.googleapis.com" type="host">maps.googleapis.com</value>
+                <value id="places.googleapis.com" type="host">places.googleapis.com</value>
             </values>
         </policy>
         <policy id="img-src">

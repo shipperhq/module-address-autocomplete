@@ -117,3 +117,7 @@ INFRA-1328 - Removed incorrect case-sensitive version of file
 SHQ23-5984 Migrate to new Google Places API
 
 
+## 21.0.1 (2026-01-05)
+SHQ23-6882 Update CSP whitelist
+
+
