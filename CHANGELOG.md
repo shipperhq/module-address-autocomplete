@@ -121,3 +121,7 @@ SHQ23-5984 Migrate to new Google Places API
 SHQ23-6882 Update CSP whitelist
 
 
+## 21.0.2 (2026-01-21)
+ENG26-182 Fix unescaped output
+
+

@@ -287,5 +287,5 @@ $viewModel = $block->getViewModel();
                 });
             }
         }, 50);
-    })('<?php echo $viewModel->getConfig('shipping/shipper_autocomplete/google_api_key') ?>');
+    })('<?= $block->escapeJs($viewModel->getConfig('shipping/shipper_autocomplete/google_api_key')) ?>');
 </script>
