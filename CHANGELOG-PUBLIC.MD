@@ -125,3 +125,7 @@ SHQ23-6882 Update CSP whitelist
 ENG26-182 Fix unescaped output
 
 
+## 21.0.3 (2026-05-29)
+ENG26-26 Update copyrights
+
+
