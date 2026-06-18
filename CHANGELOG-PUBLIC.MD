@@ -129,3 +129,7 @@ ENG26-182 Fix unescaped output
 ENG26-26 Update copyrights
 
 
+## 21.1.0 (2026-06-18)
+SHQ23-497 Fix autocomplete to populate the correct UK county/region
+
+

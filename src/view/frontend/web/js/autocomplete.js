@@ -29,6 +29,7 @@ define(
             route: 'long_name',
             locality: 'long_name',
             administrative_area_level_1: 'long_name',
+            administrative_area_level_2: 'long_name',
             country: 'short_name',
             postal_code: 'short_name',
             postal_code_suffix: 'short_name',
@@ -197,6 +198,7 @@ define(
 
             var street         = [];
             var region         = '';
+            var regionLevel2   = '';
             var streetNumber   = '';
             var city           = '';
             var postcode       = '';
@@ -216,6 +218,8 @@ define(
                         street[1] = value;
                     } else if (addressType === 'administrative_area_level_1') {
                         region = value;
+                    } else if (addressType === 'administrative_area_level_2') {
+                        regionLevel2 = value;
                     } else if (addressType === 'sublocality_level_1') {
                         city = value;
                     } else if (addressType === 'postal_town') {
@@ -286,6 +290,12 @@ define(
             if ($('#' + cityDomID).length) {
                 $('#' + cityDomID).val(city);
                 $('#' + cityDomID).trigger('change');
+            }
+
+            // SHQ23-497 For GB, Google returns the nation (England/Scotland/Wales) as level_1 and the county or
+            // unitary authority (Essex, Southend-on-Sea, etc.) as level_2. Prefer level_2 over level_1.
+            if (countryId === 'GB' && regionLevel2 !== '') {
+                region = regionLevel2;
             }
 
             if (region !== '') {
