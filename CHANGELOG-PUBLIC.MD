@@ -133,3 +133,7 @@ ENG26-26 Update copyrights
 SHQ23-497 Fix autocomplete to populate the correct UK county/region
 
 
+## 21.1.1 (2026-10-12)
+ENG26-1960 Improvements to the admin UI
+
+
